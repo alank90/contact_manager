@@ -18,7 +18,19 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div id="contacts">
-        <p>Hello world! This is Contact Manager.</p>
+          <p>Hello world! This is Contact Manager.</p>
+
+            <!-- =======  Template for each Contact Model ==========-->
+          <script id="contactTemplate" type="text/template">
+            <img src="<%= photo %>" alt="<%= name %>" />
+            <h1><%= name %><span><%= type %></span></h1>
+            <div><%= address %></div>
+            <dl>
+              <dt>Tel:</dt><dd><%= tel %></dd>
+              <dt>Email:</dt><dd><a href="mailto:<%= email %>"><%= email %></a></dd>
+            </dl>
+          </script>
+          <!--=== End Template=== -->
         </div>
 
 

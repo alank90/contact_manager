@@ -3,13 +3,13 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    <Alan Killian> -- <UX Designer, Primary developer, Main Front End Developer> -- <twitter>
 
 # THANKS
 
-    <name>
+    <Me>
 
-# TECHNOLOGY COLOPHON
+# TECHNOLOGY COLOPHON (A description of the tools, systems and resources used to create the Web site)
 
-    HTML5, CSS3
-    jQuery, Modernizr
+    HTML5, CSS3, HTML5Boilerplate
+    jQuery, Modernizr, Backbone.js, Underscore.js
