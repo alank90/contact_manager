@@ -12,11 +12,11 @@
         { name: "Contact 8", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" }
     ];
 
-} (jQuery));
 
-/* ============ Backbone.js Below This Line ===============*/
+
+/* ============ Backbone.js Below This Line =============== */
 //  Model Declaration
-var Contact = Backbone.Model.extend  ({
+var Contact = Backbone.Model.extend({
     defaults: {
         photo: "/img/placeholder.png"
     }
@@ -37,7 +37,7 @@ var ContactView = Backbone.View.extend ({
     render: function() {
         var tmpl = _.template(this.template);
 
-        this.$el.html(tmpl(this.model.toJson()));
+        $(this.el).html(tmpl(this.model.toJSON()));
         return this;
     }
 });
@@ -68,3 +68,7 @@ var DirectoryView = Backbone.View.extend ({
     }
 });
 
+//Instantiate the DirectoryView
+var directory = new DirectoryView();
+
+} (jQuery));
