@@ -44,53 +44,87 @@ var ContactView = Backbone.View.extend ({
 
 // Note This is a comment.
 //View for Collection
-var DirectoryView = Backbone.View.extend ({
-    el: $("#contacts"),
+var DirectoryView = Backbone.View.extend({
+        el: $("#contacts"),
 
-    initialize: function () {
-        this.collection = new Directory(contacts);
-        this.render();
-    },
+        initialize: function () {
+            this.collection = new Directory(contacts);
 
-    render: function () {
-        var that = this;
-        _.each(this.collection.models, function (item) {
-            that.renderContact(item);
-        }, this);
-    },
+            this.render();
+            this.$el.find("#filter").append(this.createSelect());
 
-    renderContact: function (item) {
-        var contactView = new ContactView({
-            model: item
-        });
-        this.$el.append(contactView.render().el);
-    },
+            this.on("change:filterType", this.filterByType, this);
+            this.collection.on("reset", this.render, this);
+        },
 
-    getTypes: function()  {
-         /* _.uniq Produces a duplicate-free version of the array.
-          _.pluck extracts a list of property values from an object array. ie,
-          _.pluck(stooges, 'name');
-          => ["moe", "larry", "curly"]*/
-         return _.uniq(this.collection.pluck("type"), false, function(type)  {
-             return type.toLowerCase();
-         });
-    },
+        render: function () {
+            this.$el.find("article").remove();
 
-    createSelect: function()  {
-         var filter = this.el.find("#filter"),
-             select = $("<select/>", {
-                 html: "<option>All</option>"
-             });
+            _.each(this.collection.models, function (item) {
+                this.renderContact(item);
+            }, this);
+        },
 
-          _.each(this.getTypes(), function(item)  {
-              var option = $("<option/", {
-                  value: item.toLowerCase(),
-                  text: item.toLowerCase()
+        renderContact: function (item) {
+            var contactView = new ContactView({
+                model: item
+            });
+            this.$el.append(contactView.render().el);
+        },
 
-              }).appendTo(select);
-          });
-          return select;
-     }
+        getTypes: function () {
+            return _.uniq(this.collection.pluck("type"));  /*Pluck an attribute from each model
+            in the collection. _.uniq produces a duplicate-free version of the plucked array*/
+        },
+
+        createSelect: function () {
+            /* Here we use a jQuery instance function to create a <select> element and as the
+            second parameter use an object to pass attributes for that element. Note: element
+            must not have any attributes assigned to it initially. */
+            var select = $("<select/>", {
+                    html: "<option value='all'>All</option>"
+                });
+
+              _.each(this.getTypes(), function (item) {
+                  var option = $("<option/>", {
+                    value: item,
+                    text: item
+                }).appendTo(select);
+            });
+
+            return select;
+        },
+
+        /*Add UI Events. The events attribute accepts an object of key:value pairs where each key specifies the type of event and a selector to bind the event handler to.*/
+        events: {
+            "change #filter select": "setFilter"
+        },
+
+        //Set filter property and fire change event
+        setFilter: function (e)  {
+            this.filterType = e.currentTarget.value;
+            this.trigger("change:filterType");
+        },
+
+        //filter the view
+        filterByType: function () {
+            if (this.filterType === "all") {
+                this.collection.reset(contacts);
+                contactsRouter.navigate("filter/all");
+            } else {
+                this.collection.reset(contacts, { silent: true });
+
+                var filterType = this.filterType,
+                    filtered = _.filter(this.collection.models, function (item) {
+                        return item.get("type") === filterType;
+                    });
+
+                this.collection.reset(filtered);
+
+                contactsRouter.navigate("filter/" + filterType);
+            }
+        }
+
 });
 
 //Instantiate the DirectoryView
