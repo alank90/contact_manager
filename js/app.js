@@ -127,7 +127,22 @@ var DirectoryView = Backbone.View.extend({
 
 });
 
-//Instantiate the DirectoryView
-var directory = new DirectoryView();
+    //add routing
+    var ContactsRouter = Backbone.Router.extend({
+        routes: {
+            "filter/:type": "urlFilter"
+        },
 
+        urlFilter: function (type) {
+            directory.filterType = type;
+            directory.trigger("change:filterType");
+        }
+    });
+
+  //Instantiate the DirectoryView
+var directory = new DirectoryView();
+var contactsRouter = new ContactsRouter();
+
+  //start history service
+Backbone.history.start();
 } (jQuery));
